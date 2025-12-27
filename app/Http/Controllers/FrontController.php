@@ -111,7 +111,7 @@ class FrontController extends Controller
  
             return view('front.pages.allTest', compact('tests'));
         }
-        dd($slug);
+        // dd($slug);
         // Find subcategory by slug
         $subcategory = Subcategory::where('slug', $slug)->firstOrFail();
 
