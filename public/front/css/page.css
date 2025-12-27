@@ -1,0 +1,107 @@
+/*=============button  element css is start ===========*/
+  
+.share-floating {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 999999;
+}
+
+
+.share-panel {
+  position: fixed;
+  right: -220px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 80px;
+  background: white;
+  padding: 15px;
+  border-radius: 8px 0 0 8px;
+  box-shadow: -3px 3px 12px rgba(0, 0, 0, 0.25);
+  transition: right 0.3s ease;
+}
+
+.share-panel.open {
+  right: 0;
+}
+
+.share-panel a {
+  display: block;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  color: #333;
+  font-weight: 600;
+}
+
+.share-panel a i {
+  font-size: 30px;
+}
+
+.bg-info,
+.bg-skyblue-dark,
+.btn-skyblue,
+.card-header {
+  background-color: #139bab !important;
+  background: #139bab !important;
+}
+
+/*===========================Govermetpage css end============================ */
+/*===========================Govermetpage css end============================ */
+
+.list-group-item a {
+  color: #333;
+  transition: 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f5faff;
+}
+
+.list-group-item a:hover {
+  color: #007bff !important;
+  padding-left: 6px;
+}
+
+.list-group-item i {
+  transition: 0.3s ease;
+}
+
+.list-group-item:hover i {
+  margin-left: 4px;
+  color: #007bff;
+}
+
+#govtpage .card-body {
+  min-height: 400px;
+}
+
+
+
+.section-two .card-body,
+.section-three .card-body{
+   min-height: 300px;
+}
+
+#shareToggle {
+     width: 50px;
+    height: 50px;
+    top: 123px;
+    right: 6px;
+    position: absolute;
+    border: 1px whitesmoke;
+}
+
+#scrollTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px; 
+  background-color: #139bab;
+  color: #fff;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  z-index: 9999;
+  transition: 0.3s;
+   border: 1px whitesmoke;
+}

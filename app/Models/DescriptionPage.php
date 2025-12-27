@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class DescriptionPage extends Model
+{
+    use HasFactory;
+   protected $fillable = [
+        'created_by',
+        'category_id',
+        'subcategory_id',
+        'eligibility',
+        'state',
+        'jobbrand',
+        'title',
+        'slug',
+        'content',
+        'status',
+        'meta_title',
+        'meta_keywords',
+        'meta_description',
+    ];
+    
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class, 'subcategory_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+}
