@@ -105,3 +105,15 @@
   transition: 0.3s;
    border: 1px whitesmoke;
 }
+.field-icon {
+  position: absolute;
+  top: 70%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #aaa;
+  z-index: 2;
+}
+.form-control.pr-5 {
+    padding-right: 2.5rem; /* make space for eye icon */
+}

@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class UserMiddleware
 {
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
- 
+        if (!Auth::check()) {
+            return redirect()->route('users.login');
+        }
 
-
-        if (!Auth::guard('user')->check()) {
-            return redirect()->route('users.login')
-                ->with('error', 'Please login first.');
+        if (Auth::user()->role !== 'user') {
+            abort(403, 'Unauthorized');
         }
 
         return $next($request);

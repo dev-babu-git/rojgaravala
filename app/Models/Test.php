@@ -17,7 +17,7 @@ class Test extends Model
         'total_marks',
         'status',
     ];
- 
+
 
 
     // Optional: Cast types
@@ -37,5 +37,10 @@ class Test extends Model
     public function exam()
     {
         return $this->belongsTo(DescriptionPage::class);
+    }
+    public function description()
+    {
+         return $this->belongsTo(DescriptionPage::class,'exam_id');
+         
     }
 }

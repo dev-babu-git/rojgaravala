@@ -10,6 +10,7 @@ use App\Models\EducationJob;
 use App\Models\JobBrand;
 use App\Models\Page;
 use App\Models\State;
+use App\Models\Test;
 use App\Models\WebsitePage;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -101,6 +102,16 @@ class FrontController extends Controller
 
     public function subcategoryPages($slug)
     {
+
+        if ($slug == 'test-series') {
+
+            $tests = Test::with('exam')
+    ->where('status', 'active')
+    ->get(); 
+ 
+            return view('front.pages.allTest', compact('tests'));
+        }
+        dd($slug);
         // Find subcategory by slug
         $subcategory = Subcategory::where('slug', $slug)->firstOrFail();
 
@@ -198,7 +209,7 @@ class FrontController extends Controller
         $latestUpdates = DescriptionPage::where('status', 1)
             ->whereRaw("FIND_IN_SET(?, jobbrand)", [$brandName])
             ->get();
-       // dd($latestUpdates);
+        // dd($latestUpdates);
         $pageName = "Organization Wise Job";
 
         return view('front.pages.allexamdata', compact('latestUpdates', 'pageName'));

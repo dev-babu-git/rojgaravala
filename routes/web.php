@@ -34,15 +34,21 @@ Route::prefix('student')->group(function () {
 
     Route::post('/login-submit', [UserLoginController::class, 'login'])
         ->name('users.login.submit');
+    Route::get('/register', [UserLoginController::class, 'registerPage'])
+        ->name('users.register');
+
+    Route::post('/register-submit', [UserLoginController::class, 'register'])
+        ->name('users.register.submit');
+
+        
 
     // Protected (ONLY USER)
-    Route::middleware(['role:user'])->group(function () {
+    Route::middleware(['user.role'])->group(function () {
 
         Route::get('/dashboard', [UserDashboardController::class, 'index'])
             ->name('users.dashboard');
 
-        Route::get('/logout', [UserLoginController::class, 'logout'])
-            ->name('users.logout');
+        Route::post('/logout', [UserLoginController::class, 'logout'])->name('users.logout');
 
         Route::get('/tests', [UserDashboardController::class, 'index'])
             ->name('student.tests.index');
@@ -55,6 +61,9 @@ Route::prefix('student')->group(function () {
 
         Route::get('/test/{test}/submit', [UserDashboardController::class, 'submit'])
             ->name('student.test.submit');
+        Route::get('/settings', [UserDashboardController::class, 'getSettings'])->name('student.settings');
+        Route::post('/settings', [UserDashboardController::class, 'updateSettings'])->name('student.settings.update');
+        
     });
 });
 
@@ -75,7 +84,6 @@ Route::get('/page-data/{slug}', [FrontController::class, 'showPage'])->name('pag
 Route::get('/brand/{slug}', [FrontController::class, 'showBrand']);
 Route::get('/education-wise/{slug}', [FrontController::class, 'educationWise']);
 
-// ⚠️ Always LAST (CMS / description page)
 Route::get('/{slug}', [FrontController::class, 'descriptionPage'])
     ->name('description.show');
 
@@ -95,7 +103,7 @@ Route::prefix('admin')->group(function () {
         ->name('admin.login.submit');
 
     // Protected (ADMIN + SYSADMIN)
-    Route::middleware(['role:admin,saysadmin'])->group(function () {
+    Route::middleware(['admin.role:admin,saysadmin'])->group(function () {
 
         Route::get('/dashboard', [AdminAuthController::class, 'index'])
             ->name('admin.dashboard');

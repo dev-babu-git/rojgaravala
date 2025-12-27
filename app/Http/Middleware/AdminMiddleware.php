@@ -18,6 +18,8 @@ class AdminMiddleware
   
     public function handle($request, Closure $next, ...$roles)
     {
+
+       
         if (!Auth::check()) {
             return redirect()->route('admin.login')
                 ->with('error', 'Please login first.');

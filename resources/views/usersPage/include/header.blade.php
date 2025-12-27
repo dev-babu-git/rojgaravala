@@ -33,9 +33,11 @@
                     <h5 class="mb-1 fw-bold">{{ Auth::user()->name ?? '' }}</h5>
                     <small class="text-muted mb-2 d-block">{{ Auth::user()->email ?? '' }}</small>
                     <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item">
-                        <i class="fas fa-cog me-2"></i> Settings
-                    </a>
+                  {{-- <a href="#" class="dropdown-item" id="profileModal">
+                        <i class="fas fa-cog me-2"></i> Profile
+                    </a> --}}
+
+                    
                     <a href="#" class="dropdown-item">
                         <i class="fas fa-key me-2"></i> Change Password
                     </a>

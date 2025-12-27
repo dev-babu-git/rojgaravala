@@ -1,9 +1,8 @@
-@extends('usersPage.layout.loginapp')
+@extends('usersPage.layout.app')
 
-@section('title', 'login')
+@section('title', 'Dashboard')
 
 @section('content')
-
 
 <div class="login-box">
     <!-- /.login-logo -->
