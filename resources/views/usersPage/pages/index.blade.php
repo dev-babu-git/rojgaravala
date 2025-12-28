@@ -16,56 +16,6 @@
     <section class="content">
 
       <div class="container-fluid mt-4">
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#profileSettingsModal">
-    Profile
-</button>
-
-<!-- Update Profile Modal -->
-<div class="modal fade" id="profileSettingsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="settingsForm">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title">Update Profile</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label>Name</label>
-                        <input type="text" name="name" value="{{ auth()->user()->name }}" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Email</label>
-                        <input type="email" name="email" value="{{ auth()->user()->email }}" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Phone</label>
-                        <input type="text" name="phone" value="{{ auth()->user()->student->phone ?? '' }}" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label>Course</label>
-                        <input type="text" name="course" value="{{ auth()->user()->student->course ?? '' }}" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label>New Password (optional)</label>
-                        <input type="password" name="password" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label>Confirm Password</label>
-                        <input type="password" name="password_confirmation" class="form-control">
-                    </div>
-                    <div id="profile-error-msg" class="text-danger"></div>
-                    <div id="profile-success-msg" class="text-success"></div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success">Save Changes</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
     <!-- Stats Cards -->
     <div class="row g-3 mb-4">
@@ -124,7 +74,77 @@
             </div>
         @endforelse
     </div>
- 
+<!-- Settings Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form id="settingsForm">
+        @csrf
+
+        <div class="modal-header">
+          <h5 class="modal-title">Update Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <!-- USER DATA -->
+          <div class="mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control">
+          </div>
+
+        <div class="mb-3">
+            <label>Enrollment Number</label>
+                    <input 
+                type="text" 
+                name="enrollment_no" 
+                class="form-control" 
+                readonly
+            >
+
+        </div>
+
+          <div class="mb-3">
+            <label>Phone</label>
+            <input type="text" name="phone" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label>Course</label>
+            <input type="text" name="course" class="form-control">
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="mb-3">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control">
+          </div>
+
+          <div id="error-msg" class="text-danger"></div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-primary">Update</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- Success Message -->
+<div id="success-msg" class="alert alert-success mt-3" style="display:none;"></div>
 
 </div>
 
@@ -132,19 +152,35 @@
     </section>
 
 </div>
-
-
-
 @endsection
 
 
 @section('scripts')
 <script>
-
 $(document).ready(function(){
 
-    // Form submit → AJAX
-    $('#settingsForm').on('submit', function(e){
+  $('#profileSettingsModal').click(function(){
+
+    $.get("{{ route('student.settings') }}", function(data){
+
+      // USER
+      $('#settingsForm [name="name"]').val(data.name);
+      $('#settingsForm [name="email"]').val(data.email);
+
+      // STUDENT
+      if(data.student){
+        $('#settingsForm [name="enrollment_no"]').val(data.student.enrollment_no ?? '');
+        $('#settingsForm [name="phone"]').val(data.student.phone ?? '');
+        $('#settingsForm [name="course"]').val(data.student.course ?? '');
+      }
+
+      $('#error-msg').html('');
+      $('#settingsModal').modal('show');
+    });
+
+  });
+
+   $('#settingsForm').on('submit', function(e){
         e.preventDefault();
         $('#profile-error-msg').html('');
         $('#profile-success-msg').html('');
@@ -156,7 +192,7 @@ $(document).ready(function(){
             success: function(response){
                 if(response.success){
                     $('#profile-success-msg').html(response.success);
-                    $('#profileSettingsModal').modal('hide');
+                    $('#settingsModal').modal('hide');
                 }
             },
             error: function(xhr){
@@ -171,7 +207,5 @@ $(document).ready(function(){
     });
 
 });
-
-</script>
-
+</script> 
 @endsection

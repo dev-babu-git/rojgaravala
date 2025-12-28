@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class Student extends Model
 {
     use HasFactory;
-     
+
 
     protected $fillable = [
         'user_id',
@@ -16,7 +17,16 @@ class Student extends Model
         'phone',
         'course',
     ];
+    public function setEnrollmentNoAttribute($value)
+    {
+        $this->attributes['enrollment_no'] = Crypt::encryptString($value);
+    }
 
+    // GET (fetch time → decrypt)
+    public function getEnrollmentNoAttribute($value)
+    {
+        return $value ? Crypt::decryptString($value) : null;
+    }
     // 🔗 User relation
     public function user()
     {

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserDashboardController extends Controller
 {
@@ -128,35 +129,40 @@ class UserDashboardController extends Controller
 
     public function  getSettings()
     {
-         
-        $student = Student::where('user_id', Auth::id())->first();
-       
+        $student = User::with('student')
+            ->where('id', auth()->id())
+            ->first();
+
         return response()->json($student);
     }
 
     public function updateSettings(Request $request)
     {
         $request->validate([
-            'phone' => 'nullable|string|max:255',
-            'course' => 'nullable|string|max:255',
-            'enrollment_no' => 'required|string|max:255|unique:students,enrollment_no,' . Auth::id() . ',user_id',
-            'password' => 'required|string',
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'nullable|min:6'
         ]);
 
-        $user = Auth::user();
+        $user = auth()->user();
 
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'errors' => ['password' => ['Incorrect password']]
-            ], 422);
-        }
+        // Update USER
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->filled('password')
+                ? bcrypt($request->password)
+                : $user->password,
+        ]);
 
-        $student = Student::where('user_id', $user->id)->first();
-        $student->phone = $request->phone;
-        $student->course = $request->course;
-        $student->enrollment_no = $request->enrollment_no;
-        $student->save();
+        // Update STUDENT (enrollment_no IGNORE)
+        $user->student()->update([
+            'phone' => $request->phone,
+            'course' => $request->course,
+        ]);
 
-        return response()->json(['success' => 'Information updated successfully!']);
+        return response()->json([
+            'success' => 'Profile updated successfully'
+        ]);
     }
 }

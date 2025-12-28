@@ -33,9 +33,9 @@
                     <h5 class="mb-1 fw-bold">{{ Auth::user()->name ?? '' }}</h5>
                     <small class="text-muted mb-2 d-block">{{ Auth::user()->email ?? '' }}</small>
                     <div class="dropdown-divider"></div>
-                  {{-- <a href="#" class="dropdown-item" id="profileModal">
+                  <a href="#" class="dropdown-item" id="profileSettingsModal">
                         <i class="fas fa-cog me-2"></i> Profile
-                    </a> --}}
+                    </a>
 
                     
                     <a href="#" class="dropdown-item">
