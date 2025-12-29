@@ -41,7 +41,7 @@
 
         <h4 class="fw-bold text-warning">ROJGARVALA</h4>
         <p>
-          <a href="https://rojgarvala.com/" class="text-warning">Rojgarvala.com</a> is a free website providing the latest jobs information with all support.
+          <a href="https://rojgarvala.in/" class="text-warning">Rojgarvala.in</a> is a free website providing the latest jobs information with all support.
         </p>
       </div>
 
@@ -104,7 +104,7 @@
       <p class="mb-0">
         &copy; {{ date('Y') }}
         <a href="{{ route('home') }}" class="text-decoration-none text-dark">
-          Rojgarvala.com
+          Rojgarvala.in
         </a>
         | All Rights Reserved.
       </p>

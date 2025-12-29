@@ -75,18 +75,18 @@ class UserLoginController extends Controller
             'role' => 'user',
         ]);
 
-        // 2️⃣ Generate dynamic enrollment number and encrypt it
-        $dynamicEnrollment = 'ENR' . strtoupper(Str::random(6));
-        $encryptedEnrollment = Crypt::encryptString($dynamicEnrollment);
+        // 2️⃣ Generate Enrollment Number using created user ID
+        $dynamicEnrollment = 'ENR' . str_pad($user->id, 6, '0', STR_PAD_LEFT);
 
         // 3️⃣ Create Student Info
         Student::create([
             'user_id' => $user->id,
-            'enrollment_no' => $encryptedEnrollment,
+            'enrollment_no' => $dynamicEnrollment,
         ]);
+
         return redirect()->route('users.login')
             ->with('success', 'Registration successful! Your Enrollment No is: ' . $dynamicEnrollment)
-            ->with('email', $request->email)           // flash email
+            ->with('email', $request->email)
             ->with('password', $request->password);
     }
 }

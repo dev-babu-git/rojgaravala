@@ -10,8 +10,8 @@
 
 <!-- Primary Meta Tags -->
 <title>{{ $meta_title ?? 'Rojgarvala | Latest Jobs Updates, Vacancy Details, Live Job Alerts' }}</title>
-<meta name="description" content="{{ $meta_description ?? 'Rojgarvala.com is a growing job updates platform where students easily find latest notifications, apply for jobs, prepare for exams, and get selected.' }}">
-<meta name="keywords" content="{{ $meta_keywords ?? 'rojgarvala, rojgar vala, rojgarvala.com, latest jobs, rojgar 2023, job updates' }}">
+<meta name="description" content="{{ $meta_description ?? 'Rojgarvala.in is a growing job updates platform where students easily find latest notifications, apply for jobs, prepare for exams, and get selected.' }}">
+<meta name="keywords" content="{{ $meta_keywords ?? 'rojgarvala, rojgar vala, rojgarvala.in, latest jobs, rojgar 2023, job updates' }}">
 
 <link rel="canonical" href="{{ url()->current() }}">
 
@@ -19,7 +19,7 @@
 <meta property="og:title" content="{{ $meta_title ?? 'Rojgar Vala Provides All Latest Job Updates' }}">
 <meta property="og:site_name" content="Rojgarvala">
 <meta property="og:url" content="{{ url()->current() }}">
-<meta property="og:description" content="{{ $meta_description ?? 'Rojgarvala.com provides government and private job updates, notes, previous year papers, current affairs, and mock tests.' }}">
+<meta property="og:description" content="{{ $meta_description ?? 'Rojgarvala.in provides government and private job updates, notes, previous year papers, current affairs, and mock tests.' }}">
 <meta property="og:type" content="article">
 <meta property="og:image" content="{{ $meta_image ?? asset('front/images/comlogo.webp') }}">
 <meta property="og:image:alt" content="Rojgarvala">

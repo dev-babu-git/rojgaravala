@@ -17,6 +17,9 @@
                     <a href="{{ route('questions.create') }}" class="btn btn-outline-primary">
                         New Question
                     </a>
+                    <button class="btn btn-success" id="importcsvdata">
+                        Import CSV / Excel
+                    </button>
                 </div>
             </div>
         </div>
@@ -154,6 +157,81 @@
         </div>
     </section>
 </div>
+ <!-- Import CSV / Excel Modal -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content shadow">
+
+            <form action="{{ route('questions.import') }}"
+                  method="POST"
+                  enctype="multipart/form-data">
+                @csrf
+
+                <!-- Header -->
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title d-flex align-items-center gap-2">
+                        <i class="fa fa-file-import"></i>
+                        Import Questions
+                    </h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body">
+
+                    <!-- Info Box -->
+                    <div class="alert alert-light border small mb-3">
+                        <ul class="mb-0 ps-3">
+                            <li>Allowed formats: <strong>CSV, XLSX</strong></li>
+                            <li>Follow the provided sample file format</li>
+                        </ul>
+                    </div>
+
+                    <!-- File Input -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Upload File
+                        </label>
+                        <input type="file"
+                               name="file"
+                               class="form-control"
+                               accept=".csv,.xlsx"
+                               required>
+                    </div>
+
+                    <!-- Sample Download -->
+                    <div class="text-end">
+                        <a href="{{ asset('sample/questions_options_sample.xlsx') }}"
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="fa fa-download"></i>
+                            Download Sample
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer bg-light">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button class="btn btn-success px-4">
+                        <i class="fa fa-upload"></i>
+                        Upload
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
 
 <!-- Preview Modal -->
 <div class="modal fade" id="previewModal">
@@ -178,6 +256,11 @@
 
 @section('scripts')
 <script>
+    $(document).on('click','#importcsvdata',function(){
+         $('#importModal').modal('show');
+        
+    });
+
 $(document).on('click','.previewBtn',function(){
     $('#pvTest').text($(this).data('test'));
     $('#pvQuestion').text($(this).data('question'));

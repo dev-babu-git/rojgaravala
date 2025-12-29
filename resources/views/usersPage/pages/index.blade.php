@@ -154,20 +154,18 @@
 </div>
 @endsection
 
-
 @section('scripts')
 <script>
 $(document).ready(function(){
 
+  // OPEN MODAL
   $('#profileSettingsModal').click(function(){
 
     $.get("{{ route('student.settings') }}", function(data){
 
-      // USER
       $('#settingsForm [name="name"]').val(data.name);
       $('#settingsForm [name="email"]').val(data.email);
 
-      // STUDENT
       if(data.student){
         $('#settingsForm [name="enrollment_no"]').val(data.student.enrollment_no ?? '');
         $('#settingsForm [name="phone"]').val(data.student.phone ?? '');
@@ -180,32 +178,38 @@ $(document).ready(function(){
 
   });
 
-   $('#settingsForm').on('submit', function(e){
-        e.preventDefault();
-        $('#profile-error-msg').html('');
-        $('#profile-success-msg').html('');
+  // UPDATE PROFILE
+  $('#settingsForm').on('submit', function(e){
+    e.preventDefault();
 
-        $.ajax({
-            url: "{{ route('student.settings.update') }}",
-            method: "POST",
-            data: $(this).serialize(),
-            success: function(response){
-                if(response.success){
-                    $('#profile-success-msg').html(response.success);
-                    $('#settingsModal').modal('hide');
-                }
-            },
-            error: function(xhr){
-                let errors = xhr.responseJSON.errors;
-                let errorHtml = '';
-                $.each(errors, function(key, value){
-                    errorHtml += value[0] + '<br>';
-                });
-                $('#profile-error-msg').html(errorHtml);
-            }
+    $('#error-msg').html('');
+    $('#success-msg').hide();
+
+    $.ajax({
+      url: "{{ route('student.settings.update') }}",
+      method: "POST",
+      data: $(this).serialize(),
+
+      success: function(response){
+        if(response.success){
+          $('#success-msg').html(response.success).show();
+          $('#settingsModal').modal('hide');
+        }
+      },
+
+      error: function(xhr){
+        let errors = xhr.responseJSON.errors;
+        let errorHtml = '';
+
+        $.each(errors, function(key, value){
+          errorHtml += value[0] + '<br>';
         });
+
+        $('#error-msg').html(errorHtml);
+      }
     });
+  });
 
 });
-</script> 
+</script>
 @endsection

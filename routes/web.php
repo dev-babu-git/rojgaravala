@@ -40,7 +40,7 @@ Route::prefix('student')->group(function () {
     Route::post('/register-submit', [UserLoginController::class, 'register'])
         ->name('users.register.submit');
 
-        
+
 
     // Protected (ONLY USER)
     Route::middleware(['user.role'])->group(function () {
@@ -63,7 +63,6 @@ Route::prefix('student')->group(function () {
             ->name('student.test.submit');
         Route::get('/settings', [UserDashboardController::class, 'getSettings'])->name('student.settings');
         Route::post('/settings', [UserDashboardController::class, 'updateSettings'])->name('student.settings.update');
-        
     });
 });
 
@@ -123,6 +122,12 @@ Route::prefix('admin')->group(function () {
         Route::resource('questions', QuestionController::class);
         Route::resource('options', OptionController::class);
 
+        Route::post('questions/import', [QuestionController::class, 'import'])->name('questions.import');
+        Route::get('/download/sample-questions', function () {
+            return response()->download(
+                public_path('sample/questions_sample.xlsx')
+            );
+        })->name('questions.sample.download');
         Route::post('/change-status', [AdminController::class, 'changeStatus']);
 
         Route::get(

@@ -12,14 +12,60 @@ use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UserDashboardController extends Controller
 {
+
     public function index()
     {
+        $userId = auth()->id();
+
         $tests = Test::all();
-        return view('usersPage.pages.index', compact('tests'));
+        $totalTests = $tests->count();
+
+        // Completed Tests
+        $completedTests = 0;
+
+        foreach ($tests as $test) {
+            $totalQuestions = $test->questions()->count();
+
+            $answered = DB::table('student_answers')
+                ->where('user_id', $userId)
+                ->where('test_id', $test->id)
+                ->count();
+
+            if ($answered === $totalQuestions && $totalQuestions > 0) {
+                $completedTests++;
+            }
+        }
+
+        $pendingTests = $totalTests - $completedTests;
+
+        // Score
+        $totalCorrect = DB::table('student_answers')
+            ->join('options', 'student_answers.option_id', '=', 'options.id')
+            ->where('student_answers.user_id', $userId)
+            ->where('options.is_correct', 1)
+            ->count();
+
+        $totalAttempted = DB::table('student_answers')
+            ->where('user_id', $userId)
+            ->count();
+
+        $averageScore = $totalAttempted > 0
+            ? round(($totalCorrect / $totalAttempted) * 100, 2)
+            : 0;
+
+        return view('usersPage.pages.index', compact(
+            'tests',
+            'totalTests',
+            'completedTests',
+            'pendingTests',
+            'averageScore'
+        ));
     }
+
 
     public function startTest(Test $test)
     {

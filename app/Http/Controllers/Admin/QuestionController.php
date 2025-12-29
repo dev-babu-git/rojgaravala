@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Question;
 use Illuminate\Support\Str;
+use App\Imports\QuestionsOptionsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class QuestionController extends Controller
 {
@@ -86,5 +88,20 @@ class QuestionController extends Controller
         $question->delete();
 
         return back()->with('success', 'Question deleted');
+    }
+
+
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,xlsx'
+        ]);
+
+        Excel::import(new QuestionsOptionsImport, $request->file('file'));
+
+        return redirect()
+            ->route('questions.index')
+            ->with('success', 'Questions uploaded successfully');
     }
 }
