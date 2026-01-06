@@ -106,7 +106,7 @@ class FrontController extends Controller
 
         if ($slug == 'test-series') {
 
-            $exams = Exam::where('status', 'active')->get();
+            $exams = Exam::where('status',1)->get();
 
             return view('front.pages.exam', compact('exams'));
         }
