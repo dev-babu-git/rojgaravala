@@ -98,7 +98,7 @@
                                     <input type="checkbox"
                                         class="custom-control-input"
                                         id="switch{{ $test->id }}"
-                                        {{ $test->status == 'active' ? 'checked' : '' }}
+                                        {{ $test->status == 1 ? 'checked' : '' }}
                                         onchange="changeStatus('{{ $test->id }}', '{{ $type }}')">
                                     <label class="custom-control-label" for="switch{{ $test->id }}"></label>
                                 </div>
