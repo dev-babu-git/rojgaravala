@@ -108,6 +108,7 @@ class UserLoginController extends Controller
     // Login to attempt test
     public function loginToAttempt(Test $test)
     {
+        
         // agar already attempt exist karta ho (guest ke liye)
         $attempt = TestAttempt::create([
             'user_id'         => null,           // guest
@@ -122,6 +123,6 @@ class UserLoginController extends Controller
         // attempt id session me save
         session(['pending_attempt_id' => $attempt->id]);
 
-        return redirect()->route('users.login');
+        return redirect()->route('student.login');
     }
 }

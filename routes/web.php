@@ -32,7 +32,7 @@ Route::prefix('student')->group(function () {
     /* =====================================================
        GUEST ROUTES (LOGIN / REGISTER / LOGIN TO ATTEMPT)
     ===================================================== */
-    Route::middleware('guest')->group(function () {
+    
 
         // Login to attempt (store pending attempt)
         Route::get('/login-to-attempt/{test}', [UserLoginController::class, 'loginToAttempt'])
@@ -51,7 +51,7 @@ Route::prefix('student')->group(function () {
 
         Route::post('/register', [UserLoginController::class, 'register'])
             ->name('student.register.submit');
-    });
+   
 
 
     /* =====================================================

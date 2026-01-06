@@ -14,13 +14,8 @@
         transform: translateY(-5px);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
-
-    .test-card img {
-        background: #f7f7f7;
-        padding: 10px;
-        border-radius: 12px;
-    }
 </style>
+
 <div class="container my-5">
 
     <!-- EXAM HEADER -->
@@ -34,7 +29,7 @@
     <!-- SEARCH -->
     <div class="d-flex mb-4 gap-2">
         <input type="text" class="form-control"
-            placeholder="Type here and press enter to search...">
+               placeholder="Type here and press enter to search...">
         <button class="btn btn-primary">
             <i class="fa fa-search"></i>
         </button>
@@ -45,7 +40,7 @@
 
         @forelse($tests as $test)
         <div class="col-lg-4 col-md-6">
-            <div class="card h-100 border-0 shadow-sm">
+            <div class="card h-100 border-0 shadow-sm test-card">
 
                 <div class="card-body">
 
@@ -59,16 +54,7 @@
                         </small>
                     </div>
 
-                    {{-- ATTEMPTS --}}
-                    @php
-                    $remaining = $maxAttempts - ($test->used_attempts ?? 0);
-                    @endphp
-
-                    <p class="text-muted small">
-                        Remaining attempts : <b>{{ max($remaining, 0) }}</b>
-                    </p>
-
-                    {{-- INFO --}}
+                    {{-- TEST INFO --}}
                     <div class="row text-center mb-3">
                         <div class="col-4">
                             <div class="p-2 bg-light rounded">
@@ -90,32 +76,19 @@
                         </div>
                     </div>
 
-                    {{-- ACTION BUTTON --}}
-                    @guest
-                    <a href="{{ route('login.to.attempt', $test->id) }}" class="btn btn-primary w-100 rounded-pill">
-                        Login to Attempt
-                    </a>
-                    @else
-
-                    @if($remaining > 0)
-                    <a href="{{ route('student.tests.start', $test->id) }}"
-                        class="btn btn-success w-100 rounded-pill">
-                        {{ $test->used_attempts > 0 ? 'Re-Attempt Test' : 'Start Test' }}
-                    </a>
-                    @else
-                    <button class="btn btn-secondary w-100 rounded-pill" disabled>
-                        Attempts Over
-                    </button>
-                    @endif
-
-                    @endguest
+                    
+                        <a href="{{ route('student.login.to.attempt', $test->id) }}"
+                           class="btn btn-primary w-100 rounded-pill">
+                            Login to Attempt
+                        </a>
+                    
 
                 </div>
 
             </div>
         </div>
         @empty
-        <p class="text-center">No tests available</p>
+            <p class="text-center text-muted">No tests available</p>
         @endforelse
 
     </div>
