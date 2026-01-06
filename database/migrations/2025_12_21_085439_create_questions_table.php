@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('test_id');
             $table->text('question_text');
             $table->integer('marks')->default(1);
-            $table->enum('status', ['active', 'inactive'])->default('active');
+           $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

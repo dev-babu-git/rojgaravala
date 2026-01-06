@@ -7,6 +7,7 @@ use App\Models\Test;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\DescriptionPage;
+use App\Models\Exam;
 
 class TestController extends Controller
 {
@@ -23,7 +24,7 @@ class TestController extends Controller
 
         // Filter by status
         if ($status = $request->query('status')) {
-            if (in_array($status, ['active', 'inactive'])) {
+            if (in_array($status, [0,1])) {
                 $query->where('status', $status);
             }
         }
@@ -42,7 +43,7 @@ class TestController extends Controller
     // Store
     public function create()
     {
-        $examData = DescriptionPage::all();
+        $examData = Exam::all();
         return view('admin.pages.tests.create', compact('examData'));
     }
 
@@ -56,7 +57,7 @@ class TestController extends Controller
             'slug'        => 'nullable|string|unique:tests,slug',
             'duration'    => 'required|integer|min:1',
             'total_marks' => 'required|integer|min:1',
-            'status'      => 'nullable|in:active,inactive',
+            'status'      => 'nullable',
         ]);
 
         // Step 2: Generate slug if not provided
@@ -70,7 +71,7 @@ class TestController extends Controller
         }
 
         // Step 4: Set default status if not provided
-        $validated['status'] = $validated['status'] ?? 'inactive';
+        $validated['status'] = $validated['status'] ?? 0;
 
         // Step 5: Insert into database
         try {
@@ -91,8 +92,7 @@ class TestController extends Controller
     // Edit Form
     public function edit(Test $test)
     {
-        $examData = DescriptionPage::all();
-
+        $examData = Exam::all();
         return view(
             'admin.pages.tests.edit',
             compact('test', 'examData')
@@ -108,7 +108,7 @@ class TestController extends Controller
             'slug'         => 'nullable|string|unique:tests,slug,' . $test->id,
             'duration'     => 'required|integer|min:1',
             'total_marks'  => 'required|integer|min:1',
-            'status'       => 'required|in:active,inactive',
+            'status'       => 'required',
         ]);
 
         $validated['slug'] = $validated['slug']

@@ -1,4 +1,4 @@
-@extends('usersPage.layout.app')
+@extends('student.layout.app')
 
 @section('title', 'Dashboard')
 
@@ -12,7 +12,7 @@
         </div>
         <div class="card-body">
             <p class="login-box-msg">Sign in to start your session</p>
-            <form action="{{ route('users.login.submit') }}" method="post">
+            <form action="{{ route('student.login.submit') }}" method="post">
                 @csrf
                 <div class="input-group mb-3">
                     <input type="email" name="email" class="form-control" placeholder="Email" required>

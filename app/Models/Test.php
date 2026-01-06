@@ -15,32 +15,22 @@ class Test extends Model
         'slug',
         'duration',
         'total_marks',
-        'status',
+        'status'
     ];
 
 
 
-    // Optional: Cast types
-    // protected $casts = [
-    //     'duration' => 'integer',
-    //     'total_marks' => 'integer',
-    //     'status' => 'string',
-    // ];
 
-
-
-    // ✅ ADD THIS METHOD
     public function questions()
     {
         return $this->hasMany(Question::class);
     }
     public function exam()
     {
-        return $this->belongsTo(DescriptionPage::class);
+        return $this->belongsTo(Exam::class);
     }
-    public function description()
+    public function attempts()
     {
-         return $this->belongsTo(DescriptionPage::class,'exam_id');
-         
+        return $this->hasMany(TestAttempt::class);
     }
 }

@@ -23,7 +23,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('users.login.submit') }}" method="POST">
+                    <form action="{{ route('student.login.submit') }}" method="POST">
                         @csrf
 
                         {{-- Email --}}
@@ -67,7 +67,7 @@
                     {{-- Register CTA --}}
                     <div class="text-center">
                         <p class="mb-2">Don’t have an account?
-                        <a href="{{ route('users.register') }}" >
+                        <a href="{{ route('student.register') }}" >
                             Create New Account
                         </a>
                         </p>

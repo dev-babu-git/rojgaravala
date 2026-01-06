@@ -16,6 +16,7 @@ use App\Http\Controllers\StateController;
 use App\Http\Controllers\EducationJobController;
 use App\Http\Controllers\JobBrandController;
 use App\Http\Controllers\WebsitePageController;
+use App\Http\Controllers\ExamController;
 
 use App\Http\Controllers\Student\UserLoginController;
 use App\Http\Controllers\Student\UserDashboardController;
@@ -28,44 +29,79 @@ use App\Http\Controllers\Student\UserDashboardController;
 
 Route::prefix('student')->group(function () {
 
-    // Guest
-    Route::get('/login', [UserLoginController::class, 'loginPage'])
-        ->name('users.login');
+    /* =====================================================
+       GUEST ROUTES (LOGIN / REGISTER / LOGIN TO ATTEMPT)
+    ===================================================== */
+    Route::middleware('guest')->group(function () {
 
-    Route::post('/login-submit', [UserLoginController::class, 'login'])
-        ->name('users.login.submit');
-    Route::get('/register', [UserLoginController::class, 'registerPage'])
-        ->name('users.register');
+        // Login to attempt (store pending attempt)
+        Route::get('/login-to-attempt/{test}', [UserLoginController::class, 'loginToAttempt'])
+            ->name('student.login.to.attempt');
 
-    Route::post('/register-submit', [UserLoginController::class, 'register'])
-        ->name('users.register.submit');
+        // Login
+        Route::get('/login', [UserLoginController::class, 'loginPage'])
+            ->name('student.login');
+
+        Route::post('/login', [UserLoginController::class, 'login'])
+            ->name('student.login.submit');
+
+        // Register
+        Route::get('/register', [UserLoginController::class, 'registerPage'])
+            ->name('student.register');
+
+        Route::post('/register', [UserLoginController::class, 'register'])
+            ->name('student.register.submit');
+    });
 
 
+    /* =====================================================
+       AUTHENTICATED STUDENT ROUTES
+    ===================================================== */
+    Route::middleware(['auth', 'user.role'])->group(function () {
 
-    // Protected (ONLY USER)
-    Route::middleware(['user.role'])->group(function () {
-
+        /* Dashboard */
         Route::get('/dashboard', [UserDashboardController::class, 'index'])
-            ->name('users.dashboard');
+            ->name('student.dashboard');
 
-        Route::post('/logout', [UserLoginController::class, 'logout'])->name('users.logout');
+        /* Logout */
+        Route::post('/logout', [UserLoginController::class, 'logout'])
+        ->name('student.logout');
 
-        Route::get('/tests', [UserDashboardController::class, 'index'])
-            ->name('student.tests.index');
+        /* Exams */
+        // Route::get('/exams', [UserDashboardController::class, 'exams'])
+        //     ->name('student.exams.index');
 
-        Route::get('/test/{test}/start', [UserDashboardController::class, 'startTest'])
+        /* Tests by Exam */
+        // Route::get('/exams/{slug}/tests', [UserDashboardController::class, 'testsByExam'])
+        //     ->name('student.exams.tests');
+
+        /* Start / Continue Test */
+        Route::get('/tests/{test}/start', [UserDashboardController::class, 'startTest'])
             ->name('student.tests.start');
 
-        Route::post('/answer/save', [UserDashboardController::class, 'saveAnswer'])
-            ->name('student.answer.save');
+        Route::get('/tests/{test}/question', [UserDashboardController::class, 'showQuestion'])
+            ->name('student.tests.question');
+        Route::get('/my-tests', [UserDashboardController::class, 'myTests'])
+            ->name('student.my-tests');
+        /* Save Answer */
+        Route::post('/tests/answer', [UserDashboardController::class, 'saveAnswer'])
+            ->name('student.tests.answer.save');
 
-        Route::get('/test/{test}/submit', [UserDashboardController::class, 'submit'])
-            ->name('student.test.submit');
-        Route::get('/settings', [UserDashboardController::class, 'getSettings'])->name('student.settings');
-        Route::post('/settings', [UserDashboardController::class, 'updateSettings'])->name('student.settings.update');
+        /* Submit Test */
+        Route::get('/tests/{test}/submit', [UserDashboardController::class, 'submit'])
+            ->name('student.tests.submit');
+
+        /* Profile */
+        Route::get('/settings', [UserDashboardController::class, 'getSettings'])
+            ->name('student.settings');
+
+        Route::post('/settings', [UserDashboardController::class, 'updateSettings'])
+            ->name('student.settings.update');
     });
-});
 
+    Route::get('/test/result/{attempt}', [UserDashboardController::class, 'result'])
+        ->name('student.tests.result');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -82,7 +118,8 @@ Route::get('/state-wise/{slug}', [FrontController::class, 'stateWiseList']);
 Route::get('/page-data/{slug}', [FrontController::class, 'showPage'])->name('page.show');
 Route::get('/brand/{slug}', [FrontController::class, 'showBrand']);
 Route::get('/education-wise/{slug}', [FrontController::class, 'educationWise']);
-
+Route::get('/exams/{slug}', [FrontController::class, 'testsByExam'])
+    ->name('front.exams.tests');
 Route::get('/{slug}', [FrontController::class, 'descriptionPage'])
     ->name('description.show');
 
@@ -121,6 +158,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('tests', TestController::class);
         Route::resource('questions', QuestionController::class);
         Route::resource('options', OptionController::class);
+        Route::resource('exams', ExamController::class);
+
 
         Route::post('questions/import', [QuestionController::class, 'import'])->name('questions.import');
         Route::get('/download/sample-questions', function () {

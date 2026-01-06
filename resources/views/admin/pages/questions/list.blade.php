@@ -17,7 +17,7 @@
                     <a href="{{ route('questions.create') }}" class="btn btn-outline-primary">
                         New Question
                     </a>
-                    <button class="btn btn-success" id="importcsvdata">
+                    <button class="btn btn-outline-info" id="importcsvdata">
                         Import CSV / Excel
                     </button>
                 </div>
@@ -52,8 +52,8 @@
                         <div class="col-md-4">
                             <select name="status" class="form-control">
                                 <option value="">-- All Status --</option>
-                                <option value="active" {{ request('status')=='active'?'selected':'' }}>Active</option>
-                                <option value="inactive" {{ request('status')=='inactive'?'selected':'' }}>Inactive</option>
+                                <option value="1" {{ request('status')== 1 ?'selected':'' }}>Active</option>
+                                <option value="0" {{ request('status')== 0 ?'selected':'' }}>Inactive</option>
                             </select>
                         </div>
 
@@ -97,11 +97,16 @@
                                 <td>{{ Str::limit($question->question_text, 50) }}</td>
 
                                 <td>{{ $question->marks }}</td>
-
-                                <td>
-                                    <span class="badge bg-{{ $question->status=='active'?'success':'danger' }}">
-                                        {{ ucfirst($question->status) }}
-                                    </span>
+                                 <td>
+                                    @php $type = 'Question'; @endphp
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox"
+                                            class="custom-control-input"
+                                            id="switch{{ $question->id }}"
+                                            {{ $question->status == 1 ? 'checked' : '' }}
+                                            onchange="changeStatus('{{ $question->id }}', '{{ $type }}')">
+                                        <label class="custom-control-label" for="switch{{ $question->id }}"></label>
+                                    </div>
                                 </td>
 
                                 <td>

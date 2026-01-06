@@ -26,23 +26,22 @@
 
             <div class="card">
                 <div class="card-body">
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <!-- FORM START -->
                     <form action="{{ route('tests.store') }}" method="POST">
                         @csrf
                          <div class="row">
                             <div class="col-md-6">
                                 <label>Exam Type</label>
-                              <select name="exam_id" class="form-control" required>
+                                <select name="exam_id" class="form-control" required>
                                     <option value="">-- Select Test --</option>
                                     @foreach($examData as $exam)
                                         <option value="{{ $exam->id }}">{{ $exam->title }}</option>
@@ -126,8 +125,8 @@
                             <div class="col-md-6">
                                 <label>Status</label>
                                 <select name="status" class="form-control">
-                                    <option value="active" selected>Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="1" selected>Active</option>
+                                    <option value="0">Inactive</option>
                                 </select>
                             </div>
                           </div>

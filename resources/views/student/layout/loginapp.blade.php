@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
-    @include('usersPage.include.headerLink')
+    @include('student.include.headerLink')
 
 </head>
 
 <body class="hold-transition login-page">
     @yield('content')
-    @include('usersPage.include.footerLink')
+    @include('student.include.footerLink')
 
 </body>
 

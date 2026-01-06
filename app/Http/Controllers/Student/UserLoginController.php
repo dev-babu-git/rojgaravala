@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Student;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\TestAttempt;
+use App\Models\Test;
 
 class UserLoginController extends Controller
 {
@@ -37,7 +39,19 @@ class UserLoginController extends Controller
             $user->session_id = session()->getId();
             $user->save();
 
-            return redirect()->route('users.dashboard');
+
+            if (session()->has('pending_attempt_id')) {
+
+                TestAttempt::where('id', session('pending_attempt_id'))
+                    ->update([
+                        'user_id'         => $user->id,
+                        'attempt_user_id' => $user->id,
+                    ]);
+
+                session()->forget('pending_attempt_id');
+            }
+
+            return redirect()->route('student.dashboard');
         }
 
         return back()->with('error', 'Invalid credentials');
@@ -52,7 +66,7 @@ class UserLoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('users.login')->with('success', 'Logged out successfully.');
+        return redirect()->route('student.login')->with('success', 'Logged out successfully.');
     }
 
     public function registerPage()
@@ -88,5 +102,26 @@ class UserLoginController extends Controller
             ->with('success', 'Registration successful! Your Enrollment No is: ' . $dynamicEnrollment)
             ->with('email', $request->email)
             ->with('password', $request->password);
+    }
+
+
+    // Login to attempt test
+    public function loginToAttempt(Test $test)
+    {
+        // agar already attempt exist karta ho (guest ke liye)
+        $attempt = TestAttempt::create([
+            'user_id'         => null,           // guest
+            'test_id'         => $test->id,
+            'attempt_user_id' => null,           // login ke baad fill hoga
+            'status'          => 'started',
+            'started_at'      => now(),
+        ]);
+
+
+
+        // attempt id session me save
+        session(['pending_attempt_id' => $attempt->id]);
+
+        return redirect()->route('users.login');
     }
 }

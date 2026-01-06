@@ -44,8 +44,8 @@
                         <div class="col-md-4">
                             <select name="status" class="form-control">
                                 <option value="">-- All Status --</option>
-                                <option value="active" {{ request('status')=='active'?'selected':'' }}>Active</option>
-                                <option value="inactive" {{ request('status')=='inactive'?'selected':'' }}>Inactive</option>
+                                <option value="1" {{ request('status')== 1 ?'selected':'' }}>Active</option>
+                                <option value="0" {{ request('status')== 0 ?'selected':'' }}>Inactive</option>
                             </select>
                         </div>
 
@@ -91,11 +91,18 @@
                                 <td>{{ $test->slug ?? '-' }}</td>
                                 <td>{{ $test->duration ?? '-' }} min</td>
                                 <td>{{ $test->total_marks ?? '-' }}</td>
+                                
                                 <td>
-                                    <span class="badge bg-{{ $test->status=='active'?'success':'danger' }}">
-                                        {{ ucfirst($test->status ?? '-') }}
-                                    </span>
-                                </td>
+                                @php $type = 'Test'; @endphp
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox"
+                                        class="custom-control-input"
+                                        id="switch{{ $test->id }}"
+                                        {{ $test->status == 'active' ? 'checked' : '' }}
+                                        onchange="changeStatus('{{ $test->id }}', '{{ $type }}')">
+                                    <label class="custom-control-label" for="switch{{ $test->id }}"></label>
+                                </div>
+                            </td>
                                 <td>
                                     <!-- Preview -->
                                     <button class="btn btn-sm btn-outline-info previewBtn"

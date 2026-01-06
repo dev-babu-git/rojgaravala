@@ -10,6 +10,9 @@ use App\Models\DescriptionPage;
 use App\Models\EducationJob;
 use App\Models\State;
 use App\Models\WebsitePage;
+use App\Models\Exam;
+use App\Models\Question;
+use App\Models\Test;
 
 class AdminController extends Controller
 {
@@ -33,12 +36,21 @@ class AdminController extends Controller
             case 'State':
                 $model = State::class;
                 break;
+
+            case 'Exam':
+                $model = Exam::class;
+                break;
             case 'WebsitePage':
                 $model = WebsitePage::class;
                 break;
+            case 'Test':
+                $model = Test::class;
+                break;
 
-                
-
+            case 'Question':
+                $model = Question::class;
+                break;
+            
             default:
                 return response()->json(['success' => false, 'message' => 'Invalid type']);
         }

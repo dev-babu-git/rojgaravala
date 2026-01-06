@@ -43,7 +43,7 @@ class QuestionController extends Controller
             'test_id' => 'required|exists:tests,id',
             'question_text' => 'required|string',
             'marks' => 'required|integer|min:1',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required',
         ]);
 
         Question::create([
@@ -72,7 +72,7 @@ class QuestionController extends Controller
             'test_id' => 'required|exists:tests,id',
             'question_text' => 'required|string',
             'marks' => 'required|integer',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required',
         ]);
 
         $question->update($request->all());

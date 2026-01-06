@@ -26,7 +26,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
         <!-- Logo / Brand -->
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ route('users.dashboard') }}">
+        <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ route('student.dashboard') }}">
             <i class="bi bi-mortarboard-fill me-2"></i> Student Portal
         </a>
 
@@ -65,7 +65,7 @@
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form action="{{ route('users.logout') }}" method="POST">
+                            <form action="{{ route('student.logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="dropdown-item text-danger d-flex align-items-center">
                                     <i class="bi bi-box-arrow-right me-2"></i> Logout

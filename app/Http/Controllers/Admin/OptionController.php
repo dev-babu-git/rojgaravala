@@ -56,7 +56,7 @@ class OptionController extends Controller
         $request->validate([
             'question_id' => 'required|exists:questions,id',
             'option_text.*' => 'required|string',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required',
         ], [
             'option_text.*.required' => 'Each option text is required',
         ]);
@@ -97,7 +97,7 @@ class OptionController extends Controller
         $request->validate([
             'question_id' => 'required|exists:questions,id',
             'option_text' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive'
+            'status' => 'required'
         ]);
 
         $option->update([

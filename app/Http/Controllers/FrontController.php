@@ -7,6 +7,7 @@ use App\Models\Subcategory;
 use Illuminate\Http\Request;
 use App\Models\DescriptionPage;
 use App\Models\EducationJob;
+use App\Models\Exam;
 use App\Models\JobBrand;
 use App\Models\Page;
 use App\Models\State;
@@ -105,11 +106,9 @@ class FrontController extends Controller
 
         if ($slug == 'test-series') {
 
-            $tests = Test::with('exam')
-    ->where('status', 'active')
-    ->get(); 
- 
-            return view('front.pages.allTest', compact('tests'));
+            $exams = Exam::where('status', 'active')->get();
+
+            return view('front.pages.exam', compact('exams'));
         }
         // dd($slug);
         // Find subcategory by slug
@@ -123,6 +122,34 @@ class FrontController extends Controller
 
         return view('front.pages.subcategory', compact('subcategory', 'pages'));
     }
+
+    // SHOW TESTS BY EXAM
+    public function testsByExam($slug)
+    {
+        $exam = Exam::where('slug', $slug)
+            ->where('status', 'active')
+            ->firstOrFail();
+
+        $maxAttempts = 3;
+
+        $tests = Test::withCount([
+            'attempts as used_attempts' => function ($query) {
+                if (auth()->check()) {
+                    $query->where('user_id', auth()->id());
+                }
+            }
+        ])
+            ->where('exam_id', $exam->id)
+            ->where('status', 1)
+            ->get();
+
+        return view('front.pages.test', compact(
+            'exam',
+            'tests',
+            'maxAttempts'
+        ));
+    }
+
 
 
 

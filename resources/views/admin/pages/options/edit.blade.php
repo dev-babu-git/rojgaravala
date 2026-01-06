@@ -73,8 +73,8 @@
                         <div class="mb-3">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-control @error('status') is-invalid @enderror">
-                                <option value="active" {{ $option->status == 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ $option->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="1" {{ $option->status == 1 ? 'selected' : '' }}>Active</option>
+                                <option value="0" {{ $option->status == 0 ? 'selected' : '' }}>Inactive</option>
                             </select>
                             @error('status')
                                 <span class="text-danger">{{ $message }}</span>

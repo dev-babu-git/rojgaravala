@@ -5,72 +5,152 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Test;
-use App\Models\StudentAnswer;
+use App\Models\Exam;
 use App\Models\Question;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Student;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\StudentAnswer;
+use App\Models\TestAttempt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class UserDashboardController extends Controller
 {
+    
+   public function index()
+{
+    $userId = auth()->id();
 
-    public function index()
+    $totalTests = Test::count();
+
+    $completedTests = TestAttempt::where('user_id', $userId)
+        ->where('status', 'completed')
+        ->count();
+
+    $pendingTests = TestAttempt::where('user_id', $userId)
+        ->where('status', 'started')
+        ->count();
+
+    // Score avg
+    $totalCorrect = DB::table('student_answers')
+        ->join('options', 'student_answers.option_id', '=', 'options.id')
+        ->where('student_answers.user_id', $userId)
+        ->where('options.is_correct', 1)
+        ->count();
+
+    $totalAttempted = DB::table('student_answers')
+        ->where('user_id', $userId)
+        ->count();
+
+    $averageScore = $totalAttempted > 0
+        ? round(($totalCorrect / $totalAttempted) * 100, 2)
+        : 0;
+
+    // 🔥 MY TESTS (IMPORTANT)
+    $myTests = TestAttempt::with(['test.exam'])
+        ->where('user_id', $userId)
+        ->latest()
+        ->get();
+
+    return view('student.pages.index', compact(
+        'totalTests',
+        'completedTests',
+        'pendingTests',
+        'averageScore',
+        'myTests'
+    ));
+}
+
+
+   public function myTests()
+{
+    $userId = auth()->id();
+
+    $myTests = TestAttempt::with(['test.exam', 'test.questions'])
+        ->where('user_id', $userId)
+        ->latest()
+        ->get()
+        ->unique('test_id');
+
+    return view('student.pages.my-tests', compact('myTests'));
+}
+
+
+    /* ===============================
+        EXAMS LIST
+    =============================== */
+    // public function exams()
+    // {
+    //     $userId = auth()->id();
+
+    //     // Student ne jin tests ko attempt kiya
+    //     $examIds = TestAttempt::where('user_id', $userId)
+    //         ->join('tests', 'test_attempts.test_id', '=', 'tests.id')
+    //         ->pluck('tests.exam_id')
+    //         ->unique();
+
+    //     // Sirf wahi exams dikhana
+    //     $exams = Exam::whereIn('id', $examIds)
+    //         ->where('status', 'active')
+    //         ->get();
+
+    //     return view('student.pages.exams', compact('exams'));
+    // }
+
+     
+
+    /* ===============================
+        START TEST
+    =============================== */
+    public function startTest(Test $test)
     {
+
         $userId = auth()->id();
+        $maxAttempts = 100;
 
-        $tests = Test::all();
-        $totalTests = $tests->count();
+        $usedAttempts = TestAttempt::where('user_id', $userId)
+            ->where('test_id', $test->id)
+            ->where('status', 'completed')
+            ->count();
 
-        // Completed Tests
-        $completedTests = 0;
-
-        foreach ($tests as $test) {
-            $totalQuestions = $test->questions()->count();
-
-            $answered = DB::table('student_answers')
-                ->where('user_id', $userId)
-                ->where('test_id', $test->id)
-                ->count();
-
-            if ($answered === $totalQuestions && $totalQuestions > 0) {
-                $completedTests++;
-            }
+        if ($usedAttempts >= $maxAttempts) {
+            return back()->with('error', 'Attempts over');
         }
 
-        $pendingTests = $totalTests - $completedTests;
+        // Get or create active attempt
+        TestAttempt::firstOrCreate(
+            [
+                'user_id' => $userId,
+                'test_id' => $test->id,
+                'status'  => 'started',
+            ],
+            [
+                // 'attempt_no' => $usedAttempts + 1,
+                'started_at' => now(),
+            ]
+        );
 
-        // Score
-        $totalCorrect = DB::table('student_answers')
-            ->join('options', 'student_answers.option_id', '=', 'options.id')
-            ->where('student_answers.user_id', $userId)
-            ->where('options.is_correct', 1)
-            ->count();
+        session(['current_qno' => 1]);
 
-        $totalAttempted = DB::table('student_answers')
-            ->where('user_id', $userId)
-            ->count();
-
-        $averageScore = $totalAttempted > 0
-            ? round(($totalCorrect / $totalAttempted) * 100, 2)
-            : 0;
-
-        return view('usersPage.pages.index', compact(
-            'tests',
-            'totalTests',
-            'completedTests',
-            'pendingTests',
-            'averageScore'
-        ));
+        return redirect()->route('student.tests.question', $test->id);
     }
 
 
-    public function startTest(Test $test)
+    /* ===============================
+        SHOW QUESTION
+    =============================== */
+    public function showQuestion(Test $test)
     {
-        // Get current question number from session
         $qno = session('current_qno', 1);
+
+        $totalQuestions = $test->questions()->count();
+
+        if ($qno < 1) {
+            $qno = 1;
+        }
+
+        if ($qno > $totalQuestions) {
+            return redirect()->route('student.tests.submit', $test->id);
+        }
 
         $question = $test->questions()
             ->orderBy('id')
@@ -78,137 +158,194 @@ class UserDashboardController extends Controller
             ->first();
 
         if (!$question) {
-            // Test finished
-            session()->forget('current_qno');
-            return redirect()->route('student.test.submit', $test->id);
+            return redirect()->route('student.tests.submit', $test->id);
         }
 
-        return view('usersPage.pages.startTest', compact('test', 'question', 'qno'));
+        // already selected option (for previous)
+        $selectedOption = StudentAnswer::where('user_id', auth()->id())
+            ->where('question_id', $question->id)
+            ->value('option_id');
+        // dd($selectedOption);
+        return view('student.pages.startTest', compact(
+            'test',
+            'question',
+            'qno',
+            'totalQuestions',
+            'selectedOption'
+        ));
     }
 
 
+    /* ===============================
+        SAVE ANSWER
+    =============================== */
     public function saveAnswer(Request $request)
     {
-        // Validation
-        $validator = Validator::make($request->all(), [
-            'test_id' => 'required|exists:tests,id',
-            'question_id' => 'required|exists:questions,id',
-            'option_id' => 'required|exists:options,id',
-        ], [
-            'test_id.required' => 'Test ID is required.',
-            'test_id.exists' => 'Invalid test selected.',
-            'question_id.required' => 'Question ID is required.',
-            'question_id.exists' => 'Invalid question selected.',
-            'option_id.required' => 'You must select an option.',
-            'option_id.exists' => 'Invalid option selected.',
+        $request->validate([
+            'test_id' => 'required',
+            'question_id' => 'required',
+            'option_id' => 'nullable',
+            'action' => 'required'
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+        if ($request->option_id) {
+            StudentAnswer::updateOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                    'question_id' => $request->question_id,
+                ],
+                [
+                    'test_id' => $request->test_id,
+                    'option_id' => $request->option_id,
+                ]
+            );
         }
 
-        // Save or update answer
-        StudentAnswer::updateOrCreate(
-            [
-                'user_id' => auth()->id(),
-                'question_id' => $request->question_id,
-            ],
-            [
-                'test_id'   => $request->test_id,
-                'option_id' => $request->option_id,
-            ]
-        );
+        $qno = session('current_qno', 1);
 
-        // Session based question number (Recommended)
-        $current_qno = session('current_qno', 1);
-        session(['current_qno' => $current_qno + 1]);
+        if ($request->action === 'next') {
+            session(['current_qno' => $qno + 1]);
+        }
 
-        return redirect()->route('student.tests.start', $request->test_id);
+        if ($request->action === 'prev') {
+            session(['current_qno' => max(1, $qno - 1)]);
+        }
+        if ($request->action === 'submit') {
+            return redirect()->route('student.tests.submit', $request->test_id);
+        }
+        return redirect()->route('student.tests.question', $request->test_id);
     }
 
+
+    /* ===============================
+        SUBMIT TEST
+    =============================== */
 
     public function submit(Test $test)
     {
-        $answers = StudentAnswer::with(['question', 'option'])
-            ->where('user_id', auth()->id())
+        $userId = auth()->id();
+
+        // Close test attempt
+        TestAttempt::where('user_id', $userId)
+            ->where('test_id', $test->id)
+            ->where('status', 'started')
+            ->update([
+                'status' => 'completed',
+                'submitted_at' => now(),
+            ]);
+
+        session()->forget('current_qno');
+
+        $answers = StudentAnswer::with([
+            'question.options',
+            'option'
+        ])
+            ->where('user_id', $userId)
             ->where('test_id', $test->id)
             ->get();
 
-        $totalQuestions = $answers->count();
         $right = 0;
         $wrong = 0;
-
         $wrongQuestions = [];
 
         foreach ($answers as $ans) {
+
+            $correctOption = $ans->question
+                ? $ans->question->options->where('is_correct', 1)->first()
+                : null;
 
             if ($ans->option && $ans->option->is_correct) {
                 $right++;
             } else {
                 $wrong++;
 
-                // correct option fetch
-                $correctOption = $ans->question
-                    ? $ans->question->options()->where('is_correct', 1)->first()
-                    : null;
-
                 $wrongQuestions[] = [
-                    'question'        => $ans->question->question_text ?? '-',
-                    'user_answer'     => $ans->option->option_text ?? 'Not Answered',
-                    'correct_answer' => $correctOption->option_text ?? '-',
+                    'question'        => $ans->question?->question_text ?? '-',
+                    'your_answer'     => $ans->option?->option_text ?? 'Not Answered',
+                    'correct_answer' => $correctOption?->option_text ?? '-',
                 ];
             }
         }
 
-        $score = $right; // ya $right * marks
+        $totalQuestions = $test->questions()->count();
 
-        return view('usersPage.pages.testResult', compact(
-            'score',
-            'totalQuestions',
+        $percentage = $totalQuestions > 0
+            ? round(($right / $totalQuestions) * 100, 2)
+            : 0;
+
+        $status = $percentage >= 40 ? 'Pass' : 'Fail';
+
+        return view('student.pages.testResult', compact(
             'right',
             'wrong',
+            'totalQuestions',
+            'percentage',
+            'status',
             'wrongQuestions'
         ));
     }
 
-    public function  getSettings()
-    {
-        $student = User::with('student')
-            ->where('id', auth()->id())
-            ->first();
 
-        return response()->json($student);
+ public function result(TestAttempt $attempt)
+{
+    // 🔐 Security check
+    if ($attempt->user_id !== auth()->id()) {
+        abort(403);
     }
 
-    public function updateSettings(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'nullable|min:6'
-        ]);
+    $test = $attempt->test;
 
-        $user = auth()->user();
+    $questions = $test->questions()->with('options')->get();
 
-        // Update USER
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->filled('password')
-                ? bcrypt($request->password)
-                : $user->password,
-        ]);
+    $answers = StudentAnswer::where('user_id', auth()->id())
+        ->where('test_id', $test->id)
+        ->get()
+        ->keyBy('question_id');
 
-        // Update STUDENT (enrollment_no IGNORE)
-        $user->student()->update([
-            'phone' => $request->phone,
-            'course' => $request->course,
-        ]);
+    $correct = 0;
+    $wrong = 0;
+    $unattempted = 0;
 
-        return response()->json([
-            'success' => 'Profile updated successfully'
-        ]);
+    $resultData = [];
+
+    foreach ($questions as $q) {
+
+        $studentAnswer = $answers->get($q->id);
+        $correctOption = $q->options->where('is_correct', 1)->first();
+
+        if (!$studentAnswer) {
+            $unattempted++;
+            $status = 'unattempted';
+        } elseif ($studentAnswer->option_id == optional($correctOption)->id) {
+            $correct++;
+            $status = 'correct';
+        } else {
+            $wrong++;
+            $status = 'wrong';
+        }
+
+        $resultData[] = [
+            'question'       => $q->question_text,
+            'your_answer'    => $studentAnswer->option->option_text ?? 'Not Attempted',
+            'correct_answer' => $correctOption->option_text ?? '-',
+            'status'         => $status,
+        ];
     }
+
+    $total = $questions->count();
+    $percentage = $total > 0 ? round(($correct / $total) * 100, 2) : 0;
+    $resultStatus = $percentage >= 40 ? 'Pass' : 'Fail';
+
+    return view('student.pages.result', compact(
+        'test',
+        'attempt',
+        'total',
+        'correct',
+        'wrong',
+        'unattempted',
+        'percentage',
+        'resultStatus',
+        'resultData'
+    ));
+}
 }

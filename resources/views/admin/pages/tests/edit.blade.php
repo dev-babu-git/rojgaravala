@@ -59,7 +59,7 @@
                                     <label>Test Title *</label>
                                     <input type="text"
                                         name="title"
-                                        id="title"
+                                        id="name"
                                         class="form-control @error('title') is-invalid @enderror"
                                         value="{{ old('title', $test->title) }}"
                                         placeholder="Test Title"
@@ -126,12 +126,12 @@
                                 <div class="mb-3">
                                     <label>Status *</label>
                                     <select name="status" class="form-control">
-                                        <option value="active"
-                                            {{ old('status', $test->status) == 'active' ? 'selected' : '' }}>
+                                        <option value="1"
+                                            {{ old('status', $test->status) == 1 ? 'selected' : '' }}>
                                             Active
                                         </option>
-                                        <option value="inactive"
-                                            {{ old('status', $test->status) == 'inactive' ? 'selected' : '' }}>
+                                        <option value="0"
+                                            {{ old('status', $test->status) == 0 ? 'selected' : '' }}>
                                             Inactive
                                         </option>
                                     </select>
