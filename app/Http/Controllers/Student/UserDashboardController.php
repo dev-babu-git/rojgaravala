@@ -73,34 +73,7 @@ class UserDashboardController extends Controller
 
     return view('student.pages.my-tests', compact('myTests'));
 }
-
-
-    /* ===============================
-        EXAMS LIST
-    =============================== */
-    // public function exams()
-    // {
-    //     $userId = auth()->id();
-
-    //     // Student ne jin tests ko attempt kiya
-    //     $examIds = TestAttempt::where('user_id', $userId)
-    //         ->join('tests', 'test_attempts.test_id', '=', 'tests.id')
-    //         ->pluck('tests.exam_id')
-    //         ->unique();
-
-    //     // Sirf wahi exams dikhana
-    //     $exams = Exam::whereIn('id', $examIds)
-    //         ->where('status', 'active')
-    //         ->get();
-
-    //     return view('student.pages.exams', compact('exams'));
-    // }
-
-     
-
-    /* ===============================
-        START TEST
-    =============================== */
+  
     public function startTest(Test $test)
     {
 

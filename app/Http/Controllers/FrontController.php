@@ -127,7 +127,7 @@ class FrontController extends Controller
     public function testsByExam($slug)
     {
         $exam = Exam::where('slug', $slug)
-            ->where('status', 'active')
+            ->where('status', 1)
             ->firstOrFail();
 
         $maxAttempts = 3;
