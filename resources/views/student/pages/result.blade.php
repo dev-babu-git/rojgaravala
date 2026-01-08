@@ -3,22 +3,43 @@
 @section('title','Test Result')
 
 @section('content')
-<section class="content pt-3">
+
+<section class="content pt-4">
 <div class="container-fluid">
 
-{{-- SUMMARY --}}
-<div class="card shadow-sm mb-4">
+<div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">{{ $test->title }} – Result</h4>
+
+        {{-- 🔽 ATTEMPT DROPDOWN --}}
+        @if($allAttempts->count() > 1)
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle"
+                        data-toggle="dropdown">
+                    Attempt {{ $allAttempts->search(fn($a) => $a->id === $attempt->id) + 1 }}
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                    @foreach($allAttempts as $index => $att)
+                        <a class="dropdown-item {{ $att->id == $attempt->id ? 'active' : '' }}"
+                           href="{{ route('student.tests.result', $att->id) }}">
+                            Attempt {{ $index + 1 }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+    </div>
+
     <div class="card-body text-center">
 
-        <h4 class="fw-bold">{{ $test->title }}</h4>
-        <p class="text-muted">{{ $test->exam->title ?? '' }}</p>
-
-        <div class="row mt-4">
-
+        {{-- SUMMARY --}}
+        <div class="row justify-content-center mb-4">
             <div class="col-md-3">
                 <div class="card bg-info text-white">
                     <div class="card-body">
-                        <h6>Total</h6>
+                        <h6>Total Questions</h6>
                         <h3>{{ $total }}</h3>
                     </div>
                 </div>
@@ -41,71 +62,59 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-3">
-                <div class="card bg-warning text-dark">
-                    <div class="card-body">
-                        <h6>Unattempted</h6>
-                        <h3>{{ $unattempted }}</h3>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <h5>
+            Score: <strong>{{ $percentage }}%</strong>
+        </h5>
+
+        <h4 class="mt-2">
+            Result:
+            <span class="badge {{ $resultStatus == 'Pass' ? 'bg-success' : 'bg-danger' }}">
+                {{ $resultStatus }}
+            </span>
+        </h4>
 
         <hr>
 
-        <h5>Score : <b>{{ $percentage }}%</b></h5>
-        <span class="badge {{ $resultStatus == 'Pass' ? 'bg-success' : 'bg-danger' }}">
-            {{ $resultStatus }}
-        </span>
+        {{-- ❌ WRONG / REVIEW --}}
+        <h4 class="text-start mt-4">Question Review</h4>
 
-    </div>
-</div>
+        @foreach($resultData as $i => $row)
+            <div class="card mt-3
+                {{ $row['status'] == 'correct' ? 'border-success' : ($row['status']=='wrong' ? 'border-danger' : 'border-secondary') }}">
+                <div class="card-body text-start">
+                    <p class="fw-bold">
+                        Q{{ $i+1 }}. {{ $row['question'] }}
+                    </p>
 
-{{-- QUESTION WISE RESULT --}}
-<div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Question Analysis</h5>
-    </div>
+                    <p class="mb-1">
+                        Your Answer:
+                        <strong>{{ $row['your_answer'] }}</strong>
+                    </p>
 
-    <div class="card-body">
-
-        @foreach($resultData as $index => $row)
-        <div class="mb-4 p-3 border rounded">
-
-            <h6 class="fw-bold">
-                Q{{ $index + 1 }}. {{ $row['question'] }}
-            </h6>
-
-            <p class="mb-1">
-                <b>Your Answer:</b>
-                <span class="
-                    {{ $row['status']=='correct' ? 'text-success' : 
-                       ($row['status']=='wrong' ? 'text-danger' : 'text-warning') }}">
-                    {{ $row['your_answer'] }}
-                </span>
-            </p>
-
-            <p class="mb-1">
-                <b>Correct Answer:</b>
-                <span class="text-success">
-                    {{ $row['correct_answer'] }}
-                </span>
-            </p>
-
-            <span class="badge 
-                {{ $row['status']=='correct' ? 'bg-success' : 
-                   ($row['status']=='wrong' ? 'bg-danger' : 'bg-warning text-dark') }}">
-                {{ ucfirst($row['status']) }}
-            </span>
-
-        </div>
+                    <p class="mb-0 text-success">
+                        Correct Answer:
+                        <strong>{{ $row['correct_answer'] }}</strong>
+                    </p>
+                </div>
+            </div>
         @endforeach
+
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="{{ route('student.dashboard') }}" class="btn btn-primary">
+                Dashboard
+            </a>
+
+            <a href="{{ route('student.my-tests') }}" class="btn btn-outline-secondary">
+                My Tests
+            </a>
+        </div>
 
     </div>
 </div>
 
 </div>
 </section>
+
 @endsection

@@ -98,7 +98,7 @@ class UserLoginController extends Controller
             'enrollment_no' => $dynamicEnrollment,
         ]);
 
-        return redirect()->route('users.login')
+        return redirect()->route('student.login')
             ->with('success', 'Registration successful! Your Enrollment No is: ' . $dynamicEnrollment)
             ->with('email', $request->email)
             ->with('password', $request->password);

@@ -60,7 +60,7 @@
                     </form>
 
                     <div class="text-center mt-3">
-                        <a href="{{ route('users.login') }}">
+                        <a href="{{ route('student.login') }}">
                             Already have an account? Login
                         </a>
                     </div>

@@ -16,7 +16,7 @@ return new class extends Migration {
                   ->nullable()
                   ->constrained()
                   ->nullOnDelete();
- 
+
             // TEST
             $table->foreignId('test_id')
                   ->constrained()

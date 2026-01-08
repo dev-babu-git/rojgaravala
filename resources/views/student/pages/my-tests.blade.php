@@ -3,20 +3,22 @@
 @section('title','My Tests')
 
 @section('content')
- 
+
 <section class="content pt-3">
-  
+
 
     <div class="row g-4">
 
-        @forelse($myTests as $row)
+        @forelse($myTests as $testId => $attempts)
+
         @php
-            $test = $row->test;
+        // $attempts is NOW a collection
+        $latestAttempt = $attempts->first();
+        $test = $latestAttempt->test;
         @endphp
 
         <div class="col-lg-4 col-md-6">
             <div class="card border-0 shadow-sm h-100 rounded-4">
-
                 <div class="card-body">
 
                     {{-- EXAM NAME --}}
@@ -31,7 +33,7 @@
 
                     {{-- DATE --}}
                     <small class="text-muted">
-                        {{ $row->created_at->format('d M Y') }}
+                        Last Attempt: {{ $latestAttempt->created_at->format('d M Y') }}
                     </small>
 
                     {{-- STATS --}}
@@ -56,23 +58,46 @@
                         </div>
                     </div>
 
-                    {{-- ACTION --}}
-                    <a href="{{ route('student.tests.start', $test->id) }}"
-                       class="btn btn-success w-100 rounded-pill">
-                        Start Test
-                    </a>
+                    {{-- 🔥 ACTION BUTTONS --}}
+                    <div class="d-grid gap-2">
+
+                        {{-- FIRST TIME (NO ATTEMPT SUBMITTED) --}}
+                        @if($attempts->count() == 1 && is_null($latestAttempt->submitted_at))
+
+                        <a href="{{ route('student.tests.start', $test->id) }}"
+                            class="btn btn-success rounded-pill">
+                            Start Test
+                        </a>
+
+                        {{-- AFTER TEST SUBMITTED --}}
+                        @else
+
+                        <a href="{{ route('student.tests.start', $test->id) }}"
+                            class="btn btn-warning rounded-pill">
+                            Re-attempt Test
+                        </a>
+
+                        <a href="{{ route('student.tests.result', $latestAttempt->id) }}"
+                            class="btn btn-primary rounded-pill">
+                            View Result
+                        </a>
+
+                        @endif
+
+                    </div>
 
                 </div>
             </div>
         </div>
 
         @empty
-            <p class="text-center text-muted">No tests found</p>
+        <p class="text-center text-muted">No tests found</p>
         @endforelse
+
 
     </div>
 
-</div>
+
 </section>
- 
+
 @endsection

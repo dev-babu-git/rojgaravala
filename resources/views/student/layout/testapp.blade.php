@@ -1,94 +1,126 @@
- 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>@yield('title', 'Student Dashboard')</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('admin/plugins/fontawesome-free/css/all.min.css') }}">
+
+    <!-- AdminLTE -->
+    <link rel="stylesheet" href="{{ asset('admin/css/adminlte.min.css') }}">
+
     <style>
-        body { background-color: #f8f9fa; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.15); transition: 0.3s; }
-        .test-card { cursor: pointer; }
-        .navbar { background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .avatar { width: 40px; height: 40px; object-fit: cover; }
+        .navbar-custom {
+            background: #0d6efd;
+        }
+        .navbar-custom .nav-link,
+        .navbar-custom .navbar-brand {
+            color: #fff !important;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #e2e6ea !important;
+        }
+        .user-img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+        }
     </style>
+
+    @yield('styles')
 </head>
-<body>
 
-<!-- Navbar -->
+<body class="hold-transition layout-top-nav">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container-fluid">
-        <!-- Logo / Brand -->
-        <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ route('student.dashboard') }}">
-            <i class="bi bi-mortarboard-fill me-2"></i> Student Portal
-        </a>
+<div class="wrapper">
 
-        <!-- Mobile Toggle -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#studentNavbar" 
-            aria-controls="studentNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <!-- TOP NAVBAR -->
+    <nav class="main-header navbar navbar-expand navbar-custom">
+        <div class="container">
 
-        <!-- Navbar Links & User -->
-        <div class="collapse navbar-collapse" id="studentNavbar">
-            <ul class="navbar-nav ms-auto align-items-center">
+            <!-- Brand -->
+            <a href="{{ route('student.dashboard') }}" class="navbar-brand font-weight-bold">
+                <i class="fas fa-user-graduate mr-2"></i> Student Portal
+            </a>
 
-                <!-- Notifications (Optional) -->
-                <li class="nav-item me-3">
-                    <a class="nav-link position-relative" href="#">
-                        <i class="bi bi-bell-fill fs-5"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
+            <!-- Right navbar -->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- Notifications -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-danger navbar-badge">3</span>
                     </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-header">3 Notifications</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> New message
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">See All</a>
+                    </div>
                 </li>
 
-                <!-- User Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ asset('admin/img/avatar5.png') }}" class="rounded-circle me-2" width="40" height="40" alt="Avatar">
-                        <span class="fw-semibold">{{ Auth::user()->name ?? 'Student' }}</span>
+                <!-- User Menu -->
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        <img src="{{ asset('admin/img/avatar5.png') }}"
+                             class="user-img img-circle elevation-2"
+                             alt="User Image">
+                        <span class="d-none d-md-inline">
+                            {{ Auth::user()->name ?? 'Student' }}
+                        </span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                        <li class="px-3 py-2">
-                            <strong>{{ Auth::user()->name ?? '' }}</strong><br>
-                            <small class="text-muted">{{ Auth::user()->email ?? '' }}</small>
+                    <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+
+                        <li class="user-header bg-primary">
+                            <img src="{{ asset('admin/img/avatar5.png') }}"
+                                 class="img-circle elevation-2"
+                                 alt="User Image">
+                            <p>
+                                {{ Auth::user()->name ?? '' }}
+                                <small>{{ Auth::user()->email ?? '' }}</small>
+                            </p>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
+
+                        <li class="user-footer">
                             <form action="{{ route('student.logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="dropdown-item text-danger d-flex align-items-center">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                <button class="btn btn-danger btn-block">
+                                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
                                 </button>
                             </form>
                         </li>
+
                     </ul>
                 </li>
 
             </ul>
         </div>
+    </nav>
+
+    <!-- PAGE CONTENT -->
+    <div class="content-wrapper">
+        <div class="content pt-4">
+            <div class="container">
+                @yield('content')
+            </div>
+        </div>
     </div>
-</nav>
 
-<!-- Optional Bootstrap Icons CDN -->
-{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"> --}}
+</div>
 
-<!-- Dashboard Content -->
-<!-- Page Content -->
-    <div class="container my-5">
-        @yield('content')
-    </div>
+<!-- REQUIRED SCRIPTS -->
+<script src="{{ asset('admin/plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('admin/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('admin/js/adminlte.min.js') }}"></script>
 
-    <!-- Footer -->
+@yield('scripts')
+
 </body>
 </html>

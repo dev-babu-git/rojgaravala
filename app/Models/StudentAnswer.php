@@ -15,6 +15,7 @@ class StudentAnswer extends Model
         'test_id',
         'question_id',
         'option_id',
+        'test_attempt_id',
     ];
 
     // 🔗 Relations

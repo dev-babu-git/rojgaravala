@@ -36,7 +36,7 @@
 
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('users.login') }}">Login</a>
+                        <a class="nav-link" href="{{ route('student.login') }}">Login</a>
                     </li>
                 @endguest
 

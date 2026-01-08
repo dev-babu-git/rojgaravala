@@ -30,10 +30,13 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
 
+            $table->unsignedBigInteger('test_attempt_id');
+
             $table->timestamps();
 
-            // Ek student ek question ka ek hi answer de
-            $table->unique(['user_id', 'question_id']);
+            // 🔹 Unique index: ek student ek question per ek attempt
+            $table->unique(['user_id', 'question_id', 'test_attempt_id'], 'unique_student_question_attempt');
+
         });
     }
 
@@ -41,7 +44,8 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
+    { 
+
         Schema::dropIfExists('student_answers');
     }
 };
