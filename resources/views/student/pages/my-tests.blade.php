@@ -22,7 +22,7 @@
                 <div class="card-body">
 
                     {{-- EXAM NAME --}}
-                    <span class="badge bg-primary mb-2">
+                    <span class="badge bg-info mb-2">
                         {{ $test->exam->title ?? 'Exam' }}
                     </span>
 
@@ -78,7 +78,7 @@
                         </a>
 
                         <a href="{{ route('student.tests.result', $latestAttempt->id) }}"
-                            class="btn btn-primary rounded-pill">
+                            class="btn btn-outline-info rounded-pill">
                             View Result
                         </a>
 

@@ -45,12 +45,7 @@ class UserDashboardController extends Controller
             ? round(($totalCorrect / $totalAttempted) * 100, 2)
             : 0;
 
-        // 🔥 MY TESTS (IMPORTANT)
-        // $myTests = TestAttempt::with(['test.exam'])
-        //     ->where('user_id', $userId)
-        //     ->latest()
-        //     ->get();
-
+     
         $myTests = TestAttempt::with(['test.exam', 'test.questions'])
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')

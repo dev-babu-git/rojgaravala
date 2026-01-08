@@ -16,7 +16,7 @@
                     <h6 class="fw-bold">{{ $exam->title }}</h6>
 
                     <a href="{{ route('front.exams.tests', $exam->slug) }}"
-                       class="btn btn-primary mt-3 w-100">
+                       class="btn btn-info mt-3 w-100">
                         View Details
                     </a>
                 </div>

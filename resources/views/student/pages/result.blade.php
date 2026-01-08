@@ -9,7 +9,7 @@
 
 <div class="card shadow-sm">
 
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
         <h4 class="mb-0">{{ $test->title }} – Result</h4>
 
         {{-- 🔽 ATTEMPT DROPDOWN --}}
@@ -102,7 +102,7 @@
         @endforeach
 
         <div class="d-flex justify-content-center gap-3 mt-4">
-            <a href="{{ route('student.dashboard') }}" class="btn btn-primary">
+            <a href="{{ route('student.dashboard') }}" class="btn btn-outline-info">
                 Dashboard
             </a>
 

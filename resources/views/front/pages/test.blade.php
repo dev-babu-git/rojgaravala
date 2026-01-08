@@ -30,7 +30,7 @@
     <div class="d-flex mb-4 gap-2">
         <input type="text" class="form-control"
                placeholder="Type here and press enter to search...">
-        <button class="btn btn-primary">
+        <button class="btn btn-info  text-white">
             <i class="fa fa-search"></i>
         </button>
     </div>
@@ -46,7 +46,7 @@
 
                     {{-- TITLE + DATE --}}
                     <div class="mb-3 d-flex justify-content-between align-items-center">
-                        <h6 class="fw-bold text-primary">
+                        <h6 class="fw-bold text-info  text-white">
                             {{ $test->title }}
                         </h6>
                         <small class="text-muted">
@@ -78,7 +78,7 @@
 
                     
                         <a href="{{ route('student.login.to.attempt', $test->id) }}"
-                           class="btn btn-primary w-100 rounded-pill">
+                           class="btn btn-info  text-white w-100 rounded-pill">
                             Login to Attempt
                         </a>
                     

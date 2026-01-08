@@ -6,7 +6,7 @@
 
 <div class="login-box">
     <!-- /.login-logo -->
-    <div class="card card-outline card-primary">
+    <div class="card card-outline card-info">
         <div class="card-header text-center">
             <a href="#" class="h3">Login</a>
         </div>
@@ -34,7 +34,7 @@
 
                 <div class="row">
                     <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <button type="submit" class="btn btn-outline-info btn-block">Login</button>
                     </div>
                 </div>
             </form>

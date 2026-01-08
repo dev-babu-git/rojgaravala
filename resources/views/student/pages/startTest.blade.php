@@ -40,7 +40,7 @@
             <div class="d-flex justify-content-between mt-4">
 
                 @if($qno > 1)
-                    <button type="submit" name="action" value="prev" class="btn btn-secondary">
+                    <button type="submit" name="action" value="prev" class="btn btn-outline-secondary">
                         ← Previous
                     </button>
                 @else
@@ -52,7 +52,7 @@
                         Submit Test
                     </button>
                 @else
-                    <button type="submit" name="action" value="next" class="btn btn-primary">
+                    <button type="submit" name="action" value="next" class="btn btn-outline-info">
                         Next →
                     </button>
                 @endif

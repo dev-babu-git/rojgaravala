@@ -9,3 +9,4 @@
 <link rel="stylesheet" href="{{ asset('admin/css/adminlte.min.css')}}">
 <link rel="stylesheet" href="{{ asset('admin/css/custom.css')}}">
 <link rel="stylesheet" href="{{ asset('admin/css/select2.min.css')}}">
+<link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">

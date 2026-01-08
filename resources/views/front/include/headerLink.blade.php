@@ -9,6 +9,7 @@
 
 
 <!-- Primary Meta Tags -->
+
 <title>{{ $meta_title ?? 'Rojgarvala | Latest Jobs Updates, Vacancy Details, Live Job Alerts' }}</title>
 <meta name="description" content="{{ $meta_description ?? 'Rojgarvala.in is a growing job updates platform where students easily find latest notifications, apply for jobs, prepare for exams, and get selected.' }}">
 <meta name="keywords" content="{{ $meta_keywords ?? 'rojgarvala, rojgar vala, rojgarvala.in, latest jobs, rojgar 2023, job updates' }}">
@@ -36,8 +37,9 @@
   -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="{{ asset('front/css/maincss.css')}}">
-<link rel="stylesheet" href="{{ asset('front/css/page.css')}}">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="stylesheet" href="{{ asset('front/css/page.css')}}"> 
+<link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+
 
 <!-- Bootstrap -->
 <link href="{{ asset('front/css/bootstrap.min.css')}}" rel="stylesheet">

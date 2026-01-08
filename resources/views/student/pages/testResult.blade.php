@@ -9,7 +9,7 @@
 
 <div class="card shadow-sm text-center">
 
-    <div class="card-header bg-primary text-white">
+    <div class="card-header bg-info text-white">
         <h4 class="mb-0">Test Result</h4>
     </div>
 
@@ -83,7 +83,7 @@
         @endif
 
         <div class="d-flex justify-content-center gap-3 mt-4">
-            <a href="{{ route('student.dashboard') }}" class="btn btn-primary">
+            <a href="{{ route('student.dashboard') }}" class="btn btn-outline-info">
                 Go to Dashboard
             </a>
             <a href="{{ route('student.dashboard') }}" class="btn btn-outline-secondary">

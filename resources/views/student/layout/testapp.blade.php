@@ -13,9 +13,7 @@
     <link rel="stylesheet" href="{{ asset('admin/css/adminlte.min.css') }}">
 
     <style>
-        .navbar-custom {
-            background: #0d6efd;
-        }
+        
         .navbar-custom .nav-link,
         .navbar-custom .navbar-brand {
             color: #fff !important;
@@ -38,7 +36,7 @@
 <div class="wrapper">
 
     <!-- TOP NAVBAR -->
-    <nav class="main-header navbar navbar-expand navbar-custom">
+    <nav class="main-header navbar bg-info navbar-expand navbar-custom">
         <div class="container">
 
             <!-- Brand -->
@@ -50,7 +48,7 @@
             <ul class="navbar-nav ml-auto">
 
                 <!-- Notifications -->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
                         <span class="badge badge-danger navbar-badge">3</span>
@@ -64,7 +62,7 @@
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">See All</a>
                     </div>
-                </li>
+                </li> -->
 
                 <!-- User Menu -->
                 <li class="nav-item dropdown user-menu">

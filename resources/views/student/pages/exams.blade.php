@@ -17,7 +17,7 @@
                             <h6 class="fw-bold">{{ $exam->title }}</h6>
                             <p class="text-muted small">{{ $exam->description ?? '' }}</p>
 
-                            <a href="{{ route('student.exams.tests', $exam->id) }}" class="btn btn-info btn-sm">
+                            <a href="{{ route('student.exams.tests', $exam->id) }}" class="btn btn-outline-info btn-sm">
                                 View Details
                             </a>    
                         </div>
