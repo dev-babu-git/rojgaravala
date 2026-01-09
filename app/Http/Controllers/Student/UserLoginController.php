@@ -42,11 +42,28 @@ class UserLoginController extends Controller
 
             if (session()->has('pending_attempt_id')) {
 
-                TestAttempt::where('id', session('pending_attempt_id'))
-                    ->update([
-                        'user_id'         => $user->id,
-                        'attempt_user_id' => $user->id,
-                    ]);
+                $pendingAttemptId = session('pending_attempt_id');
+
+                $existingAttempt = TestAttempt::where('test_id', function ($q) use ($pendingAttemptId) {
+                    $q->select('test_id')
+                        ->from('test_attempts')
+                        ->where('id', $pendingAttemptId);
+                })
+                    ->where('attempt_user_id', $user->id)
+                    ->where('status', 'started')
+                    ->first();
+
+                if ($existingAttempt) {
+                    // ❌ Guest attempt delete karo
+                    TestAttempt::where('id', $pendingAttemptId)->delete();
+                } else {
+                    // ✅ Safe update
+                    TestAttempt::where('id', $pendingAttemptId)
+                        ->update([
+                            'user_id'         => $user->id,
+                            'attempt_user_id' => $user->id,
+                        ]);
+                }
 
                 session()->forget('pending_attempt_id');
             }
@@ -108,7 +125,7 @@ class UserLoginController extends Controller
     // Login to attempt test
     public function loginToAttempt(Test $test)
     {
-        
+
         // agar already attempt exist karta ho (guest ke liye)
         $attempt = TestAttempt::create([
             'user_id'         => null,           // guest

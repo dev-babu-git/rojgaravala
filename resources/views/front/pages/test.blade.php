@@ -29,7 +29,7 @@
     <!-- SEARCH -->
     <div class="d-flex mb-4 gap-2">
         <input type="text" class="form-control"
-               placeholder="Type here and press enter to search...">
+            placeholder="Type here and press enter to search...">
         <button class="btn btn-info  text-white">
             <i class="fa fa-search"></i>
         </button>
@@ -76,19 +76,33 @@
                         </div>
                     </div>
 
-                    
-                        <a href="{{ route('student.login.to.attempt', $test->id) }}"
-                           class="btn btn-info  text-white w-100 rounded-pill">
-                            Login to Attempt
-                        </a>
-                    
+
+                    @auth
+                    @if($test->used_attempts >= $maxAttempts)
+                    <a href="{{ route('student.tests.start', $test->id) }}"
+                        class="btn btn-info text-white w-100 rounded-pill">
+                        Attempt Test ({{ $test->used_attempts }}/{{ $maxAttempts }})
+                    </a>
+                    @else
+                    <a href="{{ route('student.tests.start', $test->id) }}"
+                        class="btn btn-info text-white w-100 rounded-pill">
+                        Attempt Test ({{ $test->used_attempts }}/{{ $maxAttempts }})
+                    </a>
+                    @endif
+                    @else
+                    <a href="{{ route('student.login.to.attempt', $test->id) }}"
+                        class="btn btn-info text-white w-100 rounded-pill">
+                        Login to Attempt
+                    </a>
+                    @endauth
+
 
                 </div>
 
             </div>
         </div>
         @empty
-            <p class="text-center text-muted">No tests available</p>
+        <p class="text-center text-muted">No tests available</p>
         @endforelse
 
     </div>

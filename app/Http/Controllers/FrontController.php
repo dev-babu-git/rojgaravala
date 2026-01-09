@@ -130,7 +130,7 @@ class FrontController extends Controller
             ->where('status', 1)
             ->firstOrFail();
 
-        $maxAttempts = 3;
+        $maxAttempts = 'unlimited';
 
         $tests = Test::withCount([
             'attempts as used_attempts' => function ($query) {

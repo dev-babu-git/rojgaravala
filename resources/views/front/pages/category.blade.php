@@ -43,7 +43,7 @@
                             {{-- Icon based on type --}}
                             @php
                                 $icon = 'fa-book'; // default icon
-                                if(strtolower($subCat->name) == 'pdf') $icon = 'fa-file-pdf';
+                                if(strtolower($subCat->name) == 'pdf') $icon = 'fa-file-pdf-o ';
                                 elseif(strtolower($subCat->name) == 'notes') $icon = 'fa-sticky-note';
                                 elseif(strtolower($subCat->name) == 'video') $icon = 'fa-video';
                             @endphp

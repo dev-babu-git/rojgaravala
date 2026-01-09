@@ -58,7 +58,7 @@
         $test = $latestAttempt->test;
         @endphp
 
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="card border-0 shadow-sm h-100 rounded-4">
                 <div class="card-body">
 
@@ -114,7 +114,7 @@
                         @else
 
                         <a href="{{ route('student.tests.start', $test->id) }}"
-                            class="btn btn-warning rounded-pill">
+                            class="btn btn-outline-warning rounded-pill">
                             Re-attempt Test
                         </a>
 
