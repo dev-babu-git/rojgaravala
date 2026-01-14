@@ -119,14 +119,19 @@
                             </tr>
                         </thead>
                         <tbody>
+
+                       
                             @foreach ($listData as $page)
+                            
                             <tr>
                                 <td>{{ ($listData->currentPage() - 1) * $listData->perPage() + $loop->iteration }}</td>
                                 <td>{{ $page->name }}</td>
                                 <td>
                                     @if($page->description)
                                     <div style="max-height:45px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:230px;">
-                                        {!! Str::limit($page->description, 60) !!}
+                                        {{ strlen(strip_tags(html_entity_decode($page->description))) > 60
+                                            ? Str::limit(strip_tags(html_entity_decode($page->description)), 60)
+                                            : strip_tags(html_entity_decode($page->description)) }}
                                     </div>
                                     @else
                                     <span class="text-muted">— NA —</span>
