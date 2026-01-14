@@ -133,10 +133,15 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @if($page->status !== null)
+
                                     <div class="custom-control custom-switch">
                                         <input type="checkbox" class="custom-control-input" id="switch{{ $page->id }}" {{ $page->status ? 'checked' : '' }} onchange="changeStatus('{{ $page->id }}','WebsitePage')">
                                         <label class="custom-control-label" for="switch{{ $page->id }}"></label>
                                     </div>
+                                    @else
+                                    <span class="text-muted">— NA —</span>
+                                    @endif
                                 </td>
                                 <td>{{ $page->created_at ?? '— NA —' }}</td>
                                 <td>{{ $page->updated_at ?? '— NA —' }}</td>
