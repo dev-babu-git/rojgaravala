@@ -98,7 +98,14 @@ class QuestionController extends Controller
             'file' => 'required|mimes:csv,xlsx'
         ]);
 
-        Excel::import(new QuestionsOptionsImport, $request->file('file'));
+        $import = new QuestionsOptionsImport();
+        Excel::import($import, $request->file('file'));
+
+        if (!empty($import->errors)) {
+            return redirect()
+                ->back()
+                ->with('import_errors', $import->errors);
+        }
 
         return redirect()
             ->route('questions.index')
