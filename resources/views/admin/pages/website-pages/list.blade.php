@@ -138,8 +138,8 @@
                                         <label class="custom-control-label" for="switch{{ $page->id }}"></label>
                                     </div>
                                 </td>
-                                <td>{{ $page->created_at }}</td>
-                                <td>{{ $page->updated_at }}</td>
+                                <td>{{ $page->created_at ?? '— NA —' }}</td>
+                                <td>{{ $page->updated_at ?? '— NA —' }}</td>
                                 <td class="text-center">
                                     <!-- Preview -->
                                     <button class="btn btn-sm btn-outline-info mx-1 previewBtn"
