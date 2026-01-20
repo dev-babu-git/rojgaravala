@@ -45,12 +45,12 @@ class UserDashboardController extends Controller
             ? round(($totalCorrect / $totalAttempted) * 100, 2)
             : 0;
 
-     
+
         $myTests = TestAttempt::with(['test.exam', 'test.questions'])
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get()
-            ->groupBy('test_id'); 
+            ->groupBy('test_id');
 
         return view('student.pages.index', compact(
             'totalTests',
@@ -181,7 +181,7 @@ class UserDashboardController extends Controller
         );
 
         // 2️⃣ Save or update answer including test_attempt_id
-        
+
         if ($request->option_id) {
             StudentAnswer::updateOrCreate(
                 [
@@ -195,7 +195,7 @@ class UserDashboardController extends Controller
                 ]
             );
         }
- 
+
         // 3️⃣ Update session for question number
         $qno = session('current_qno', 1);
 
@@ -220,15 +220,25 @@ class UserDashboardController extends Controller
     {
         $userId = auth()->id();
 
-        // Close test attempt
-        TestAttempt::where('user_id', $userId)
+        // ✅ GOOD
+        $attempt = TestAttempt::where('user_id', $userId)
             ->where('test_id', $test->id)
             ->where('status', 'started')
-            ->update([
-                'status' => 'completed',
-                'submitted_at' => now(),
-            ]);
+            ->first();
 
+        if (!$attempt) {
+            return redirect()->route('student.dashboard')
+                ->with('error', 'No active test attempt found');
+        }
+
+        $attempt->update([
+            'status' => 'completed',
+            'submitted_at' => now(),
+        ]);
+
+
+
+        // dd($data);  
         session()->forget('current_qno');
 
         $answers = StudentAnswer::with([
@@ -278,8 +288,6 @@ class UserDashboardController extends Controller
             'status',
             'wrongQuestions'
         ));
-
-        
     }
 
 
