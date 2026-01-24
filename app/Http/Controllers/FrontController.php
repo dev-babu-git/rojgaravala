@@ -154,20 +154,47 @@ class FrontController extends Controller
 
 
     public function descriptionPage($slug)
-    {
+{
+    $desciption = DescriptionPage::with(['category', 'subcategory', 'user'])
+        ->where('slug', $slug)
+        ->where('status', 1)
+        ->firstOrFail();
 
-        $desciption = DescriptionPage::where('slug', $slug)->firstOrFail();
+    // Increment view count (add views column to table)
+    // $desciption->increment('views');
 
-        return view('front.pages.descriptionDetailsPage', [
-            'desciption' => $desciption,
-            'meta_title' => $desciption->meta_title ?? $desciption->title,
-            'meta_description' => $desciption->meta_description ?? Str::limit(strip_tags($desciption->content), 150),
-            'meta_keywords' => $desciption->meta_keywords ?? 'jobs, rojgarvala, latest jobs',
-            'meta_image' => asset('front/images/comlogo.webp'),
-        ]);
+    // Get related posts
+    $relatedPosts = DescriptionPage::where('category_id', $desciption->category_id)
+        ->where('id', '!=', $desciption->id)
+        ->where('status', 1)
+        ->latest()
+        ->take(4)
+        ->get();
 
-        // return view('front.pages.descriptionDetailsPage', compact('desciption'));
-    }
+    // Get recent posts for sidebar
+    $recentPosts = DescriptionPage::where('status', 1)
+        ->latest()
+        ->take(5)
+        ->get();
+
+    // Get categories with post count
+    $categories = Category::withCount(['descriptionPages' => function($query) {
+        $query->where('status', 1);
+    }])
+    ->having('description_pages_count', '>', 0)
+    ->get();
+
+    return view('front.pages.descriptionDetailsPage', [
+        'desciption' => $desciption,
+        'relatedPosts' => $relatedPosts,
+        'recentPosts' => $recentPosts,
+        'categories' => $categories,
+        'meta_title' => $desciption->meta_title ?? $desciption->title,
+        'meta_description' => $desciption->meta_description ?? Str::limit(strip_tags($desciption->content), 155),
+        'meta_keywords' => $desciption->meta_keywords ?? 'jobs, rojgarvala, latest jobs',
+        'meta_image' => $desciption->image ? asset($desciption->image) : asset('front/images/comlogo.webp'),
+    ]);
+}
     public function showPage($slug)
     {
         $result = WebsitePage::where('slug', $slug)->firstOrFail();

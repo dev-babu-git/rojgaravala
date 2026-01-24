@@ -41,4 +41,5 @@ class DescriptionPage extends Model
     {
         return $this->hasMany(Test::class, 'exam_id');
     }
+   
 }

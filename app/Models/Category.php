@@ -27,4 +27,8 @@ class Category extends Model
     {
         return $this->hasMany(Subcategory::class, 'category_id', 'id');
     }
+     public function descriptionPages()
+    {
+        return $this->hasMany(DescriptionPage::class, 'category_id');
+    }
 }
