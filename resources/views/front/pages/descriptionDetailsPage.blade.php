@@ -4,7 +4,7 @@
 
 @section('content')
 
-<section id="govtpage" class="py-4">
+<section id="govtpage" class="py-4 bg-light">
     <div class="container">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-3">
@@ -195,34 +195,7 @@
                 </div>
                 @endif
 
-                <!-- Share Card for Mobile -->
-                <div class="card shadow-sm d-lg-none">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3"><i class="fa fa-share-alt me-2"></i>Share This Post</h5>
-                        <div class="d-flex gap-2 justify-content-center">
-                            <a href="https://api.whatsapp.com/send?text={{ urlencode($desciption->title . ' - ' . url()->current()) }}" 
-                               target="_blank" 
-                               class="btn btn-outline-success btn-sm">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                            <a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode($desciption->title) }}" 
-                               target="_blank" 
-                               class="btn btn-outline-info btn-sm">
-                                <i class="fab fa-telegram"></i>
-                            </a>
-                            <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($desciption->title) }}" 
-                               target="_blank" 
-                               class="btn btn-outline-dark btn-sm">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" 
-                               target="_blank" 
-                               class="btn btn-outline-primary btn-sm">
-                                <i class="fab fa-facebook"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+              
             </div>
         </div>
     </div>
